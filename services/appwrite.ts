@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Query, Account } from "react-native-appwrite";
+import { Account, Client, Databases, ID, Query } from "react-native-appwrite";
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const METRICS_TABLE_ID = process.env.EXPO_PUBLIC_APPWRITE_METRICS_TABLE_ID!;
@@ -83,8 +83,9 @@ export const getCurrentUser = async () => {
         const user = await account.get();
         return user;
     } catch (error) {
-        console.error("Error getting current user:", error);
-        throw error;
+        // If there is no active session, account.get() throws an error.
+        // We catch it and return null to indicate no user is logged in.
+        return null;
     }
 }
 
@@ -129,6 +130,36 @@ export const getSavedMovies = async (userId: string) => {
         return result.documents;
     } catch (error) {
         console.error("Error getting saved movies:", error);
+        throw error;
+    }
+}
+
+//function to check if a specific movie is already saved by the user
+export const checkIfSaved = async (userId: string, movieId: number) => {
+    try {
+        const result = await databases.listDocuments(DATABASE_ID, SAVED_ID, [
+            Query.equal('user_id', userId),
+            Query.equal('movie_id', movieId)
+        ]);
+
+        //Return the document if exists, otherwise null
+        if (result.documents.length > 0) {
+            return result.documents[0];
+        }
+        return null;
+    } catch (error) {
+        console.error("Error checking if movie is saved:", error);
+        return null;
+    }
+}
+
+//Function to remove a saved movie
+export const deleteSavedMovie = async (documentId: string) => {
+    try {
+        const result = await databases.deleteDocument(DATABASE_ID, SAVED_ID, documentId);
+        return result;
+    } catch (error) {
+        console.error("Error deleting saved movie:", error);
         throw error;
     }
 }

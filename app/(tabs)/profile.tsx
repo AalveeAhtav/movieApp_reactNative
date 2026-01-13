@@ -53,7 +53,7 @@ const Profile = () => {
         try {
             setLoading(true);
             // attempt to create a session
-            await signIn(email, password)
+            await signIn(email, password);
 
             //if successful, fecth user details and update UI
             const currentUser = await getCurrentUser();
@@ -88,7 +88,7 @@ const Profile = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     //handle the user logout
     const handleLogout = async () => {
@@ -104,7 +104,7 @@ const Profile = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     //render a loading screen while the app checks for a logged in user
     if (loading && !user && !email) {
@@ -136,7 +136,7 @@ const Profile = () => {
                             </View>
                         </View>
 
-                        //logout button
+                        {/* Logout Button */}
                         <TouchableOpacity
                             onPress={handleLogout}
                             className="bg-gray-800 p-4 rounded-lg items-center"
@@ -158,15 +158,73 @@ const Profile = () => {
                                 {isLoginMode ? 'Please sign in to access your saved movies' : 'Sign up to save your favorite movies'}
                             </Text>
                         </View>
+                    
 
-                        //Form fields
+                        {/*Form fields*/}
+                        <View className="gap-4">
+                            {!isLoginMode && (
+                                <View className="bg-dark-100 rounded-xl px-4 py-3 border border-dark-200 focus:border-accent">
+                                    <TextInput
+                                        placeholder="Username"
+                                        placeholderTextColor="#667"
+                                        value={username}
+                                        onChangeText={setUsername}
+                                        className="text-white text-base"
+                                    />
+                                </View>
+                            )}
+
+                            <View className="bg-dark-100 rounded-xl px-4 py-3 border border-dark-200 focus:border-accent">
+                                <TextInput
+                                    placeholder="Email"
+                                    placeholderTextColor="#667"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    className="text-white text-base"
+                                />
+                            </View>
+
+                            <View className="bg-dark-100 rounded-xl px-4 py-3 border border-dark-200 focus:border-accent">
+                                <TextInput
+                                    placeholder="Password"
+                                    placeholderTextColor="#667"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    secureTextEntry
+                                    className="text-white text-base"
+                                />
+                            </View>
+
+                            {/* Action Button */}
+                            <TouchableOpacity
+                                onPress={isLoginMode ? handleLogin : handleSignup}
+                                className="bg-accent w-full py-4 rounded-xl items-center mt-2"
+                            >
+                                <Text className="text-primary font-bold text-lg">
+                                    {isLoginMode ? 'Login' : 'Sign Up'}
+                                </Text>
+                            </TouchableOpacity>
+
+                            {/* Toggle between login and signup */}
+                            <TouchableOpacity
+                                onPress={() => setIsLoginMode(!isLoginMode)}
+                                className="items-center py-2"
+                            >
+                                <Text className="text-gray-400 text-center">
+                                    {isLoginMode ? 'Don\'t have an account?' : 'Already have an account?'}
+                                    <Text className="text-accent font-bold">
+                                        {isLoginMode ? ' Sign Up' : ' Login'}
+                                    </Text>
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                )
-
                 )}
             </View>
         </ScrollView>
-    )
+    );
 }
 
 export default Profile;
