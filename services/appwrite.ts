@@ -110,7 +110,6 @@ export const saveMovie = async (userID: string, movie: Movie) => {
             title: movie.title,
             poster_path: movie.poster_path,
             vote_average: movie.vote_average,
-            poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
         });
         return result;
     } catch (error) {

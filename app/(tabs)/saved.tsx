@@ -1,15 +1,14 @@
-import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Link, useFocusEffect, router } from 'expo-router';
-import { getSavedMovies, getCurrentUser } from '@/services/appwrite';
-import React, { useEffect, useState, useCallback } from 'react';
-import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
+import { getCurrentUser, getSavedMovies } from '@/services/appwrite';
+import { Link, router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 
 //interface defining the structure of a saved movie
 interface SavedMovie {
   $id: string;
   title: string;
-  poster_url: string;
+  poster_path: string;
   movie_id: number;
   vote_average: number;
 }
@@ -81,14 +80,14 @@ const Saved = () => {
         <FlatList
           data={savedMovies}
           keyExtractor={(item) => item.$id}
-          numColumns = {2}
-          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 20}}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 20 }}
           renderItem={({ item }) => (
             //Individual movie card
             <Link href={`/movies/${item.movie_id}`} asChild>
               <TouchableOpacity>
-                <Image 
-                  source={{ uri: item.poster_url }}
+                <Image
+                  source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
                   className="w-full h-64 rounded-xl"
                   resizeMode='cover'
                 />
